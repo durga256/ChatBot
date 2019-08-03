@@ -1,0 +1,807 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Chat Bot</title>
+<meta charset="utf-8"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="node_modules\web3\dist\web3.min.js"></script>
+<link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+<div id="chat_container">
+    <div id="chat_log">
+    </div>
+    <div class="btn-group" id="toappend">
+  </div>
+</div>
+<script>
+ var names = ["Max Life Savings Advantage Plan","Max Life Guaranteed Income Plan","Max Life Life Gain Premier","Max Life Smart Term Plan","Max Life Fast Track Super Plan","Max Life Premium Return Protection Plan","Max Life Forever Young Pension Plan","Max Life Future Genius Education Plan","Max Life Monthly Income Advantage Plan", "Max Life Whole Life Super"];
+web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
+web3.eth.defaultAccount = web3.eth.accounts[0];
+//personal.unlockAccount(web3.eth.defaultAccount);
+const contractABI =
+[{"constant":false,"inputs":[{"name":"_label","type":"uint256"}],"name":"basedOnLabel","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"_type","type":"uint256"}],"name":"basedOnType","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"_type","type":"uint256"},{"name":"_label","type":"uint256"}],"name":"basedOnTypeandLabel","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[],"name":"feedData","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"factor","type":"uint256"}],"name":"layer_Factors","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"_ttype","type":"uint8"}],"name":"setaff_type","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_ttype","type":"uint8"}],"name":"setother_type","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_ttype","type":"uint8"}],"name":"setpayout_type","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"_oneFactor","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"_oneType","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"get_oneFactor","outputs":[{"name":"","type":"uint256[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"get_oneType","outputs":[{"name":"","type":"uint256[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"number","type":"uint8"}],"name":"get_policystrtonum","outputs":[{"name":"","type":"string"},{"name":"","type":"string"},{"name":"","type":"string"},{"name":"","type":"string"},{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"number","type":"uint8"}],"name":"get_policytonum","outputs":[{"name":"","type":"uint24[7]"},{"name":"","type":"uint24[5]"},{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"policyStrToNumber","outputs":[{"name":"name","type":"string"},{"name":"deathBenefit","type":"string"},{"name":"maturityBenefit","type":"string"},{"name":"websiteURL","type":"string"},{"name":"riders","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"policyToNumber","outputs":[{"name":"rank","type":"uint256"},{"name":"online","type":"bool"},{"name":"loan","type":"bool"},{"name":"paidup","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"}];
+var MyContract = web3.eth.contract(contractABI);
+var contractInstance = MyContract.at('0xcf8fb9d1112ec955fd1a9350a39152a48d1ec222');
+console.log(contractInstance);
+
+$(function(){
+ var message = "Welcome! <br> I am Bot.<br> I'm here to help you learn more about Insurance policies available with high Claim settlement ratio.<br> Click on Get Started to understand few terminologies.";
+ chat_add_message(message,false);
+ choice_1();
+ contractInstance.feedData({value: 200, gas: 6000000}, function(err, result){
+     console.log(err, result);
+  });
+});
+function choice_1() {
+  var c1= $('<button id="getstarted">Get Started</button>');
+  $("#toappend").append(c1);
+  var c2= $('<button id="policy">Look for Specific Policy/Company</button>');
+  $("#toappend").append(c2);
+  var c3= $('<button id="compare">Compare Policies</button>');
+  $("#toappend").append(c3);
+  $("#getstarted").click(function(){
+    chat_add_message("Get Started",true);
+    choice_1_remove();
+    var message1 = "Types of Insurance <br><br>1.Unit Link Insurance Plan(ULIP): ULIP provides risk cover for the policy holder along with investment options to invest in any number of qualified investments such as stocks, bonds or mutual funds.<br><br>2. Term Insurance: Term insurance offers financial coverage to the policy holder for a specific time period. In case of death of the insured individual during the policy term, the death benefit is paid by the company to the beneficiary.<br><br>3. WholeLife Insurance Plan: A whole life policy provides guaranteed death benefits during the entire life of the policyholder. The coverage is extended for as long as the insured lives.<br><br>4. Child Insurance plans: A children future plan provides money for higher education, In case of the untimely demise of the insured parent, many child plans have what is a called premium waiver feature.<br><br>5. Retirement Plans: retirement plans let you allocate a part of your savings to accumulate over a period of time and provide you with steady income after retirement.<br><br>6. MoneyBack Plans: A money back plan allows the policyholder to receive payouts at regular intervals during the policy term as part of the survival benefit.<br><br>7. Endowment Plans: Endowment plan provides you with a combination of both i.e.: an insurance cover, as well as an savings plan. It helps you in saving regularly over a specific period of time";
+    var message2 = "Factors to look for while buying a Policy.<br><br>1. Can you afford it in the long term? <br> Look for Policies with Lower premium payable for longer duration.<br><br>2. Type of Insurance<br>Different types have their own pros and cons. However, Term Insurance is widely preferred.<br><br>3. Claim settlement ratio<br>Claim settlement ratio in the case of life insurance refers to the number of claims that the insurer has paid following the death of policyholders.Higher the ratio, less chances of claim being rejected.<br><br>4. Convenience<br> Try to buy policies available online and make use of automatic pay systems for efficient use of your policy.<br><br>5. Coverage<br> How long do you need cover for? Sometimes shorter covers could be cheaper in a family where kids grow up to earn sooner.<br><br>6. Other benefits: <br> Look for extra benefits like riders, loan against policy, paid-up plans etc..,";
+    var message3 = "What type of insurance are you looking for?";
+    chat_add_message(message1,false);
+    chat_add_message(message2,false);
+    chat_add_message(message3,false);
+    //types of insurance
+    var r1= $('<button id="child">Child Plans</button>');
+    $("#toappend").append(r1);
+    $("#child").click(function(){
+      chat_add_message("Child Plans",true);
+      type_of_insurance_remove();
+      // trigger basedOnType(0) in main.sol done
+      contractInstance.basedOnType(0,{value: 200, gas: 4000000}, function(err, result){
+          console.log(err, result);
+          var oneType = contractInstance.get_oneType();
+          console.log(oneType);
+          display_policies_type(oneType);
+          factors();
+       });
+    });
+    var r2= $('<button id="endowment">Endowment Plans</button>');
+    $("#toappend").append(r2);
+    $("#endowment").click(function(){
+      chat_add_message("Endowment Plans",true);
+      type_of_insurance_remove();
+      // trigger basedOnType(1) in main.sol done
+      contractInstance.basedOnType(1,{value: 200, gas: 4000000}, function(err, result){
+          console.log(err, result);
+          var oneType = contractInstance.get_oneType();
+          console.log(oneType);
+          display_policies_type(oneType);
+          factors();
+       });
+    });
+    var r3= $('<button id="moneyback">MoneyBack Plans</button>');
+    $("#toappend").append(r3);
+    $("#moneyback").click(function(){
+      chat_add_message("MoneyBack Plans",true);
+      type_of_insurance_remove();
+      // trigger basedOnType(2) in main.sol done
+      contractInstance.basedOnType(2,{value: 200, gas: 4000000}, function(err, result){
+          console.log(err, result);
+          var oneType = contractInstance.get_oneType();
+          console.log(oneType);
+          display_policies_type(oneType);
+          factors();
+       });
+    });
+    var r4= $('<button id="pension">Retirement Plans</button>');
+    $("#toappend").append(r4);
+    $("#pension").click(function(){
+      chat_add_message("Retirement Plans",true);
+      type_of_insurance_remove();
+      // trigger basedOnType(3) in main.sol done
+      contractInstance.basedOnType(3,{value: 200, gas: 4000000}, function(err, result){
+          console.log(err, result);
+          var oneType = contractInstance.get_oneType();
+          console.log(oneType);
+          display_policies_type(oneType);
+          factors();
+       });
+    });
+    var r5= $('<button id="term">Term Insurance</button>');
+    $("#toappend").append(r5);
+    $("#term").click(function(){
+      chat_add_message("Term Insurance",true);
+      type_of_insurance_remove();
+      // trigger basedOnType(4) main.sol done
+      contractInstance.basedOnType(4,{value: 200, gas: 4000000}, function(err, result){
+          console.log(err, result);
+          var oneType = contractInstance.get_oneType();
+          console.log(oneType);
+          display_policies_type(oneType);
+          factors();
+       });
+    });
+    var r6= $('<button id="ULIP">ULIP</button>');
+    $("#toappend").append(r6);
+    $("#ULIP").click(function(){
+      chat_add_message("ULIP",true);
+      type_of_insurance_remove();
+      // trigger basedOnType(5) in main.sol done
+      contractInstance.basedOnType(5,{value: 200, gas: 4000000}, function(err, result){
+          console.log(err, result);
+          var oneType = contractInstance.get_oneType();
+          console.log(oneType);
+          display_policies_type(oneType);
+          factors();
+       });
+    });
+    var r7= $('<button id="wholelife">WholeLife Plans</button>');
+    $("#toappend").append(r7);
+    $("#wholelife").click(function(){
+      chat_add_message("WholeLife Plans",true);
+      type_of_insurance_remove();
+      // trigger basedOnType(6) in main.sol done
+      contractInstance.basedOnType(6,{value: 200, gas: 4000000}, function(err, result){
+          console.log(err, result);
+          var oneType = contractInstance.get_oneType();
+          console.log(oneType);
+          display_policies_type(oneType);
+          factors();
+       });
+    });
+  });
+
+  $("#policy").click(function(){
+    chat_add_message("Look for Specific Company Policy",true);
+    chat_add_message("Select a company from below",false);
+    choice_1_remove();
+    var z1= $('<button id="company1">Max Life</button>');
+      $("#toappend").append(z1);
+      $("#company1").click(function(){
+        var _label =1;
+        chat_add_message("Max Life",true);
+        chat_add_message("Filter by type or display all policies?",false);
+        companylistremove();
+        var y1= $('<button id="filter">Filter by type</button>');
+        $("#toappend").append(y1);
+        $("#filter").click(function(){
+          chat_add_message("Filter by type",true);
+          chat_add_message("What type of insurance are you looking for?",false);
+          $("#filter").hide();
+          $("#display").hide();
+          var r1= $('<button id="child">Child Plans</button>');
+          $("#toappend").append(r1);
+          $("#child").click(function(){
+            chat_add_message("Child Plans",true);
+            type_of_insurance_remove();
+            // trigger basedOnType(0) in main.sol done
+            contractInstance.basedOnTypeandLabel(0,1,{value: 200, gas: 4000000}, function(err, result){
+                console.log(err, result);
+                var oneType = contractInstance.get_oneType();
+                display_policies(oneType);
+             });
+          });
+          var r2= $('<button id="endowment">Endowment Plans</button>');
+          $("#toappend").append(r2);
+          $("#endowment").click(function(){
+            chat_add_message("Endowment Plans",true);
+            type_of_insurance_remove();
+            // trigger basedOnType(1) in main.sol done
+            contractInstance.basedOnTypeandLabel(1,1,{value: 200, gas: 4000000}, function(err, result){
+                console.log(err, result);
+                var oneType = contractInstance.get_oneType();
+                display_policies(oneType);
+             });
+          });
+          var r3= $('<button id="moneyback">MoneyBack Plans</button>');
+          $("#toappend").append(r3);
+          $("#moneyback").click(function(){
+            chat_add_message("MoneyBack Plans",true);
+            type_of_insurance_remove();
+            // trigger basedOnType(2) in main.sol done
+            contractInstance.basedOnTypeandLabel(2,1,{value: 200, gas: 4000000}, function(err, result){
+                console.log(err, result);
+                var oneType = contractInstance.get_oneType();
+                display_policies(oneType);
+             });
+          });
+          var r4= $('<button id="pension">Retirement Plans</button>');
+          $("#toappend").append(r4);
+          $("#pension").click(function(){
+            chat_add_message("Retirement Plans",true);
+            type_of_insurance_remove();
+            // trigger basedOnType(3) in main.sol done
+            contractInstance.basedOnTypeandLabel(3,1,{value: 200, gas: 4000000}, function(err, result){
+                console.log(err, result);
+                var oneType = contractInstance.get_oneType();
+                display_policies(oneType);
+             });
+          });
+          var r5= $('<button id="term">Term Insurance</button>');
+          $("#toappend").append(r5);
+          $("#term").click(function(){
+            chat_add_message("Term Insurance",true);
+            type_of_insurance_remove();
+            // trigger basedOnType(4) main.sol done
+            contractInstance.basedOnTypeandLabel(4,1,{value: 200, gas: 4000000}, function(err, result){
+                console.log(err, result);
+                var oneType = contractInstance.get_oneType();
+                display_policies(oneType);
+             });
+          });
+          var r6= $('<button id="ULIP">ULIP</button>');
+          $("#toappend").append(r6);
+          $("#ULIP").click(function(){
+            chat_add_message("ULIP",true);
+            type_of_insurance_remove();
+            // trigger basedOnType(5) in main.sol done
+            contractInstance.basedOnTypeandLabel(5,1,{value: 200, gas: 4000000}, function(err, result){
+                console.log(err, result);
+                var oneType = contractInstance.get_oneType();
+                display_policies(oneType);
+             });
+          });
+          var r7= $('<button id="wholelife">WholeLife Plans</button>');
+          $("#toappend").append(r7);
+          $("#wholelife").click(function(){
+            chat_add_message("WholeLife Plans",true);
+            type_of_insurance_remove();
+            // trigger basedOnType(6) in main.sol done
+            contractInstance.basedOnTypeandLabel(6,1,{value: 200, gas: 4000000}, function(err, result){
+                console.log(err, result);
+                var oneType = contractInstance.get_oneType();
+                display_policies(oneType);
+             });
+        });
+          });
+        var y2= $('<button id="display">Display all policies</button>');
+        $("#toappend").append(y2);
+        $("#display").click(function(){
+          $("#filter").hide();
+          $("#display").hide();
+          contractInstance.basedOnLabel(1,{value: 200, gas: 4000000}, function(err, result){
+              console.log(err, result);
+              var oneType = contractInstance.get_oneType();
+              console.log(oneType);
+              display_policies(oneType);
+
+           });
+        });
+    });
+  });
+  $("#compare").click(function(){
+    choice_1_remove();
+    var message3 = "what type of insurance are you looking for?";
+    chat_add_message(message3,false);
+    //types of insurance
+    var r1= $('<button id="child">Child Plans</button>');
+    $("#toappend").append(r1);
+    $("#child").click(function(){
+      chat_add_message("Child Plans",true);
+      type_of_insurance_remove();
+      // trigger basedOnType(0) in main.sol done
+      contractInstance.basedOnType(0,{value: 200, gas: 4000000}, function(err, result){
+          console.log(err, result);
+          var oneType = contractInstance.get_oneType();
+          console.log(oneType);
+          display_policies_type(oneType);
+          factors();
+       });
+    });
+    var r2= $('<button id="endowment">Endowment Plans</button>');
+    $("#toappend").append(r2);
+    $("#endowment").click(function(){
+      chat_add_message("Endowment Plans",true);
+      type_of_insurance_remove();
+      // trigger basedOnType(1) in main.sol done
+      contractInstance.basedOnType(1,{value: 200, gas: 4000000}, function(err, result){
+          console.log(err, result);
+          var oneType = contractInstance.get_oneType();
+          console.log(oneType);
+          display_policies_type(oneType);
+          factors();
+       });
+    });
+    var r3= $('<button id="moneyback">MoneyBack Plans</button>');
+    $("#toappend").append(r3);
+    $("#moneyback").click(function(){
+      chat_add_message("MoneyBack Plans",true);
+      type_of_insurance_remove();
+      // trigger basedOnType(2) in main.sol done
+      contractInstance.basedOnType(2,{value: 200, gas: 4000000}, function(err, result){
+          console.log(err, result);
+          var oneType = contractInstance.get_oneType();
+          console.log(oneType);
+          display_policies_type(oneType);
+          factors();
+       });
+    });
+    var r4= $('<button id="pension">Retirement Plans</button>');
+    $("#toappend").append(r4);
+    $("#pension").click(function(){
+      chat_add_message("Retirement Plans",true);
+      type_of_insurance_remove();
+      // trigger basedOnType(3) in main.sol done
+      contractInstance.basedOnType(3,{value: 200, gas: 4000000}, function(err, result){
+          console.log(err, result);
+          var oneType = contractInstance.get_oneType();
+          console.log(oneType);
+          display_policies_type(oneType);
+          factors();
+       });
+    });
+    var r5= $('<button id="term">Term Insurance</button>');
+    $("#toappend").append(r5);
+    $("#term").click(function(){
+      chat_add_message("Term Insurance",true);
+      type_of_insurance_remove();
+      // trigger basedOnType(4) main.sol done
+      contractInstance.basedOnType(4,{value: 200, gas: 4000000}, function(err, result){
+          console.log(err, result);
+          var oneType = contractInstance.get_oneType();
+          console.log(oneType);
+          display_policies_type(oneType);
+          factors();
+       });
+    });
+    var r6= $('<button id="ULIP">ULIP</button>');
+    $("#toappend").append(r6);
+    $("#ULIP").click(function(){
+      chat_add_message("ULIP",true);
+      type_of_insurance_remove();
+      // trigger basedOnType(5) in main.sol done
+      contractInstance.basedOnType(5,{value: 200, gas: 4000000}, function(err, result){
+          console.log(err, result);
+          var oneType = contractInstance.get_oneType();
+          console.log(oneType);
+          display_policies_type(oneType);
+          factors();
+       });
+    });
+    var r7= $('<button id="wholelife">WholeLife Plans</button>');
+    $("#toappend").append(r7);
+    $("#wholelife").click(function(){
+      chat_add_message("WholeLife Plans",true);
+      type_of_insurance_remove();
+      // trigger basedOnType(6) in main.sol done
+      contractInstance.basedOnType(6,{value: 200, gas: 4000000}, function(err, result){
+          console.log(err, result);
+          var oneType = contractInstance.get_oneType();
+          console.log(oneType);
+          display_policies_type(oneType);
+          factors();
+       });
+    });
+  });
+}
+function factors () {
+  type_of_insurance_remove();
+  chat_add_message("What factors do you wanna decide your Insurance plans on?",false);
+  var a1= $('<button id="affordability">Affordability</button>');
+  $("#toappend").append(a1);
+  $("#affordability").click(function(){
+    chat_add_message("Affordability",true);
+    factors_layer_remove();
+    fn_affordability();
+  // trigger layer_Factors(0) in functions.sol done
+  });
+  var a2= $('<button id="convenience">Online application</button>');
+  $("#toappend").append(a2);
+  $("#convenience").click(function(){
+    chat_add_message("Online application",true);
+  factors_layer_remove();
+  // trigger layer_Factors(1) in functions.sol done
+  contractInstance.layer_Factors(1,{value: 200, gas: 4000000}, function(err, result){
+      console.log(err, result);
+      var oneFactor = contractInstance.get_oneFactor();
+      console.log(oneFactor);
+      if(oneFactor.length == 0)
+        chat_add_message("No policy of this type can be applied online",false);
+      else
+        display_policies(oneFactor);
+   });
+   //display list of Policies
+  });
+  var a5= $('<button id="payouttype">Claim Payment type</button>');
+  $("#toappend").append(a5);
+  $("#payouttype").click(function(){
+    chat_add_message("Claim Payment type",true);
+    factors_layer_remove();
+    fn_payouttype();
+    // trigger layer_Factors(4) in functions.sol done
+  });
+  var a6= $('<button id="other">Other(loan,Paid-up Plans)</button>');
+  $("#toappend").append(a6);
+  $("#other").click(function(){
+    chat_add_message("Other",true);
+    factors_layer_remove();
+    fn_other();
+    // trigger layer_Factors(5) in functions.sol done
+  });
+  var a7= $('<button id="viewpolicies">View given policies</button>');
+  $("#toappend").append(a7);
+  $("#viewpolicies").click(function(){
+    chat_add_message("View given policies",true);
+    factors_layer_remove();
+    chat_add_message("Select a policy from below to view more info",false);
+    var oneType = contractInstance.get_oneType();
+    var i;
+    for(i=0; i< oneType.length ; i++)
+      addPolicyButton(oneType[i]);
+  });
+}
+
+function fn_affordability(){
+  chat_add_message("What kind of frequency are you looking for premium payment?",false);
+  var b1= $('<button id="single">Single</button>');
+  $("#toappend").append(b1);
+  var b2= $('<button id="annual">Annual</button>');
+  $("#toappend").append(b2);
+  var b3= $('<button id="semiannual">Semi-Annual</button>');
+  $("#toappend").append(b3);
+  $("#single").click(function(){
+    chat_add_message("Single",true);
+    aff_layer_remove();
+  // trigger setaff_type(0) from functions.sol done
+  contractInstance.setaff_type(0, (err, result) => {
+  console.log(err, result);
+  contractInstance.layer_Factors(0,{value: 200, gas: 4000000}, function(err, result){
+    var oneFactor = contractInstance.get_oneFactor();
+    console.log(oneFactor);
+    if(oneFactor.length == 0)
+      chat_add_message("No policy of this type can have Single premium payment",false);
+    else
+        display_policies(oneFactor);
+   });
+  });
+  });
+  $("#annual").click(function(){
+    chat_add_message("Annual",true);
+      aff_layer_remove();
+    // trigger setaff_type(1) from functions.sol done
+    contractInstance.setaff_type(1, (err, result) => {
+    console.log(err, result);
+    contractInstance.layer_Factors(0,{value: 200, gas: 4000000}, function(err, result){
+      var oneFactor = contractInstance.get_oneFactor();
+      console.log(oneFactor);
+      if(oneFactor.length == 0)
+        chat_add_message("No policy of this type can have Annual premium payment",false);
+      else
+          display_policies(oneFactor);
+     });
+  });
+  });
+  $("#semiannual").click(function(){
+    chat_add_message("Semi-Annual",true);
+      aff_layer_remove();
+  // trigger setaff_type(2) from functions.sol done
+  contractInstance.setaff_type(2, (err, result) => {
+  console.log(err, result);
+  contractInstance.layer_Factors(0,{value: 200, gas: 4000000}, function(err, result){
+    var oneFactor = contractInstance.get_oneFactor();
+    console.log(oneFactor);
+    if(oneFactor.length == 0)
+      chat_add_message("No policy of this type can have Semi-Annual premium payment",false);
+    else
+        display_policies(oneFactor);
+   });
+ });
+  });
+}
+function fn_payouttype() {
+  chat_add_message("What kind of claim settlement are you looking for?",false);
+  var d1= $('<button id="lumpsum">Lump Sum</button>');
+  $("#toappend").append(d1);
+  var d2= $('<button id="installments">Installments</button>');
+  $("#toappend").append(d2);
+  var d3= $('<button id="lumpinstall">Lump Sum and Installments</button>');
+  $("#toappend").append(d3);
+  $("#lumpsum").click(function(){
+    chat_add_message("Lump Sum",true);
+    payout_layer_remove();
+  // trigger setpayout_type(0) from functions.sol done
+  contractInstance.setpayout_type(0, (err, result) => {
+  console.log(err, result);
+  contractInstance.layer_Factors(4,{value: 200, gas: 4000000}, function(err, result){
+  console.log(err, result);
+  var oneFactor = contractInstance.get_oneFactor();
+  console.log(oneFactor);
+  if(oneFactor.length == 0)
+    chat_add_message("No policy of this type provide Lump sum",false);
+  else
+      display_policies(oneFactor);
+  });
+  });
+  });
+  $("#installments").click(function(){
+    chat_add_message("Installments",true);
+    payout_layer_remove();
+    // trigger setpayout_type(1) from functions.sol done
+    contractInstance.setpayout_type(1, (err, result) => {
+    console.log(err, result);
+    contractInstance.layer_Factors(4,{value: 200, gas: 4000000}, function(err, result){
+    console.log(err, result);
+    var oneFactor = contractInstance.get_oneFactor();
+    console.log(oneFactor);
+    if(oneFactor.length == 0)
+      chat_add_message("No policy of this type provide payment in installments",false);
+    else
+        display_policies(oneFactor);
+    });
+  });
+  });
+  $("#lumpinstall").click(function(){
+    chat_add_message("Lump Sum and Installments",true);
+    payout_layer_remove();
+  // trigger setpayout_type(2) from functions.sol done
+  contractInstance.setpayout_type(2, (err, result) => {
+  console.log(err, result);
+  contractInstance.layer_Factors(4,{value: 200, gas: 4000000}, function(err, result){
+  console.log(err, result);
+  var oneFactor = contractInstance.get_oneFactor();
+  console.log(oneFactor);
+  if(oneFactor.length == 0)
+    chat_add_message("No policy of this type provide choice of lump sum and/or Installments",false);
+  else
+      display_policies(oneFactor);
+  });
+  });
+  });
+}
+function fn_other() {
+  chat_add_message("Loan or Paid-up Plan benefit?",false);
+  var e1= $('<button id="loan">Loan benefit</button>');
+  $("#toappend").append(e1);
+  var e2= $('<button id="paidup">Paid-up Plan benefit</button>');
+  $("#toappend").append(e2);
+  $("#loan").click(function(){
+    chat_add_message("Loan benefit",true);
+    other_layer_remove();
+    // trigger setother_type(0) from functions.sol done
+    contractInstance.setother_type(0, (err, result) => {
+    console.log(err, result);
+    contractInstance.layer_Factors(5,{value: 200, gas: 4000000}, function(err, result){
+    console.log(err, result);
+    var oneFactor = contractInstance.get_oneFactor();
+    console.log(oneFactor);
+    if(oneFactor.length == 0)
+      chat_add_message("No policy of this type provide loan benefit",false);
+    else
+        display_policies(oneFactor);
+    });
+  });
+  });
+  $("#paidup").click(function(){
+    chat_add_message("Paid-up Plan benefit",true);
+    other_layer_remove();
+    // trigger setother_type(1) from functions.sol done
+    contractInstance.setother_type(1, (err, result) => {
+    console.log(err, result);
+    contractInstance.layer_Factors(5,{value: 200, gas: 4000000}, function(err, result){
+    console.log(err, result);
+    var oneFactor = contractInstance.get_oneFactor();
+    console.log(oneFactor);
+    if(oneFactor.length == 0)
+      chat_add_message("No policy of this type provide paid up plan benefit",false);
+    else
+        display_policies(oneFactor);
+    });
+  });
+  });
+}
+function display_policies_type(x){
+  var i; var j=0;
+  var text="Policies of selected type<br>";
+  for(i = 0; i < x.length ; i++)
+  {
+      j=j+1;
+      text += j +". " + names[x[i]-1] + "<br>";
+  }
+  chat_add_message(text,false);
+}
+function display_policies(x){
+  var i; var j=0;
+  var text="Policies with all requirements<br>";
+  for(i = 0; i < x.length ; i++)
+  {
+      j=j+1;
+      text += j +". " + names[x[i]-1] + "<br>";
+  }
+  chat_add_message(text,false);
+  chat_add_message("Select a policy from below to view more info",false);
+  for(i=0; i< x.length ; i++)
+    addPolicyButton(x[i]);
+}
+function addPolicyButton(x) {
+  if(x==1){
+  var a1= $('<button id="policy1">Max Life Savings Advantage Plan</button>');
+  $("#toappend").append(a1);
+  $("#policy1").click(function(){
+    policyformat(1);
+  });
+  }
+  if(x==2){
+  var a2= $('<button id="policy2">Max Life Guaranteed Income Plan</button>');
+  $("#toappend").append(a2);
+  $("#policy2").click(function(){
+    policyformat(2);
+  });
+  }
+  if(x==3){
+  var a3= $('<button id="policy3">Max Life Life Gain Premier</button>');
+  $("#toappend").append(a3);
+  $("#policy3").click(function(){
+    policyformat(3);
+  });
+  }
+  if(x==4){
+  var a4= $('<button id="policy4">Max Life Smart Term Plan</button>');
+  $("#toappend").append(a4);
+  $("#policy4").click(function(){
+    policyformat(4);
+  });
+  }
+  if(x==5){
+  var a5= $('<button id="policy5">Max Life Fast Track Super Plan</button>');
+  $("#toappend").append(a5);
+  $("#policy5").click(function(){
+    policyformat(5);
+  });
+  }
+  if(x==6){
+  var a6= $('<button id="policy6">Max Life Premium Return Protection Plan</button>');
+  $("#toappend").append(a6);
+  $("#policy6").click(function(){
+    policyformat(6);
+  });
+  }
+  if(x==7){
+  var a7= $('<button id="policy7">Max Life Forever Young Pension Plan</button>');
+  $("#toappend").append(a7);
+  $("#policy7").click(function(){
+    policyformat(7);
+  });
+  }
+  if(x==8){
+  var a8= $('<button id="policy8">Max Life Future Genius Education Plan</button>');
+  $("#toappend").append(a8);
+  $("#policy8").click(function(){
+    policyformat(8);
+  });
+  }
+  if(x==9){
+  var a9= $('<button id="policy9">Max Life Monthly Income Advantage Plan</button>');
+  $("#toappend").append(a9);
+  $("#policy9").click(function(){
+    policyformat(9);
+  });
+  }
+  if(x==10){
+  var a10= $('<button id="policy10">Max Life Whole Life Super</button>');
+  $("#toappend").append(a10);
+  $("#policy10").click(function(){
+    policyformat(10);
+  });
+  }
+}
+function policyformat(x){
+  var ints = []; var bytes = []; var online; var csr; var loan; var paidup;
+  var name = ""; var deathBenefit = ""; var maturityBenefit = ""; var websiteURL = ""; var riders = ""; var result="";
+  [ints,bytes,online,loan,paidup] = contractInstance.get_policytonum(x);
+  [name,deathBenefit, maturityBenefit, websiteURL,riders] = contractInstance.get_policystrtonum(x);
+  csr = bytes[0]/100;
+  if (ints[2]==0) {ints[2]='custom';}
+  if (bytes[2]==0) {bytes[2]='custom';}
+  if (bytes[4]==0) {bytes[4]='custom';}
+  if (ints[0]==0) {ints[0]='custom';}
+  result += name + "<br>Claim settlement ratio: " + csr + "<br>Minimum Policy term: " + ints[0] + "<br>Maximum Policy term: " + bytes[1];
+       result += "<br>Minimum Sum Assured: " + bytes[3] + "<br>Maximum sum Assured: " + bytes[4];
+       result += "<br>Minimum Premium: " + ints[2] + "<br>Maximum premium: " + bytes[2];
+       result += "<br>Income Tax Benefit upto: " + ints[1];
+       result += "<br>Maturity Age: " + ints[3];
+       switch(ints[5])
+       {
+         case 0: result += "<br>Lump Sum benefit";
+                 break;
+         case 1: result +="<br>Paid in Installments";
+                 break;
+         case 2: result +="<br>Choice between Lumpsum and Installments";
+                 break;
+       }
+       var loan = (loan) ? "<br>Loan on policy available" : "<br>Loan on policy not available";
+       var online = (online) ? "<br>Policy can be applied online" : "<br>Online application not available";
+       var paidup = (paidup) ? "<br>Paid-Up benefit available" : "<br>Paid-up benefit not available";
+          result += loan + online + paidup;
+          result += "<br>Maturity benefit: "+ maturityBenefit + "<br>Riders: " + riders;
+       chat_add_message(result,false);
+       hideEverything();
+       var r7= $('<button id="p1url">Go to Website</button>');
+       $("#toappend").append(r7);
+       $("#p1url").click(function(){
+         window.location.href = websiteURL;
+       });
+}
+function choice_1_remove(){
+  $("#getstarted").hide();
+  $("#policy").hide();
+  $("#compare").hide();
+}
+function companylistremove(){
+  $("#company1").hide();
+}
+function other_layer_remove(){
+  $("#loan").hide();
+  $("#paidup").hide();
+}
+function type_of_insurance_remove(){
+  $("#child").hide();
+  $("#endowment").hide();
+  $("#moneyback").hide();
+  $("#pension").hide();
+  $("#term").hide();
+  $("#ULIP").hide();
+  $("#wholelife").hide();
+  $("#goback1").hide();
+}
+function onlyoneChoice_remove() {
+  $("#typeofinsurance").hide();
+  $("#displayallpolicies").hide();
+}
+function payout_layer_remove(){
+  $("#lumpsum").hide();
+  $("#installments").hide();
+  $("#lumpinstall").hide();
+}
+function aff_layer_remove() {
+  $("#single").hide();
+  $("#annual").hide();
+  $("#semiannual").hide();
+}
+function factors_layer_remove() {
+  $("#affordability").hide();
+  $("#convenience").hide();
+  $("#coverage").hide();
+  $("#csr").hide();
+  $("#payouttype").hide();
+  $("#other").hide();
+  $("#viewpolicies").hide();
+}
+function hideEverything(){
+  $("#policy1").hide();
+  $("#policy2").hide();
+  $("#policy3").hide();
+  $("#policy4").hide();
+  $("#policy5").hide();
+  $("#policy6").hide();
+  $("#policy7").hide();
+  $("#policy8").hide();
+  $("#policy9").hide();
+  $("#policy10").hide();
+}
+// Add a message to the chat history
+function chat_add_message(message, isUser) {
+    var class_suffix = isUser ? '_user' : '';
+    var html = '\
+    <div class="chat_line">\
+        <div class="chat_bubble'+class_suffix+'">\
+          <div class="chat_triangle'+class_suffix+'"></div>\
+            '+message+'\
+        </div>\
+    </div>\
+    ';
+    chat_add_html(html);
+}
+// Add HTML to the chat history
+function chat_add_html(html) {
+    $("#chat_log").append(html);
+    chat_scrolldown();
+}
+// Scrolls the chat history to the bottom
+function chat_scrolldown() {
+    $("#chat_log").animate({ scrollTop: $("#chat_log")[0].scrollHeight }, 500);
+}
+
+
+</script>
+</body>
+</html>
